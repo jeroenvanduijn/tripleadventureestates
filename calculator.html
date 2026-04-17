@@ -24,7 +24,20 @@
                 <h1>Beslis Calculator</h1>
                 <p class="subtitle">Oordeel of een investering de moeite waard is.</p>
                 <p class="tagline">Vul de gegevens in — de ratio's en scenario's rekenen live mee.</p>
-                <button id="btn-reset" class="cta-button cta-secondary" type="button">Herstel voorbeeldwaarden</button>
+                <div class="calc-toolbar">
+                    <input id="in-titel" class="analyse-titel" type="text" placeholder="Titel van deze analyse" aria-label="Titel van deze analyse">
+                    <div class="calc-toolbar-buttons">
+                        <button id="btn-save" class="cta-button cta-secondary" type="button">Opslaan</button>
+                        <button id="btn-share" class="cta-button cta-secondary" type="button">Deel link</button>
+                        <button id="btn-print" class="cta-button cta-secondary" type="button">Print / PDF</button>
+                        <button id="btn-reset" class="cta-button cta-secondary" type="button">Voorbeeldwaarden</button>
+                    </div>
+                </div>
+                <div id="toast" class="toast" role="status" aria-live="polite"></div>
+                <details id="saved-wrap" class="saved-wrap" hidden>
+                    <summary>Opgeslagen analyses (<span id="saved-count">0</span>)</summary>
+                    <ul id="saved-list" class="saved-list"></ul>
+                </details>
             </div>
         </section>
 

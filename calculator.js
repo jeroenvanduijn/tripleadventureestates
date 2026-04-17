@@ -548,12 +548,199 @@
         renderExit(r);
     }
 
+    /* ------------------------------------------
+       Opslaan / Delen
+       ------------------------------------------ */
+    const STORAGE_KEY = 'tae-calc-saved-v1';
+
+    function currentState() {
+        const state = { _t: document.getElementById('in-titel')?.value || '' };
+        document.querySelectorAll('.calc-input input').forEach((el) => {
+            state[el.id] = el.value;
+        });
+        return state;
+    }
+
+    function applyState(state) {
+        if (!state) return;
+        if (typeof state._t === 'string') {
+            const t = document.getElementById('in-titel');
+            if (t) t.value = state._t;
+        }
+        Object.entries(state).forEach(([id, val]) => {
+            if (id === '_t') return;
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+        });
+        update();
+    }
+
+    function encodeState(state) {
+        const json = JSON.stringify(state);
+        return btoa(unescape(encodeURIComponent(json)))
+            .replace(/=+$/g, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
+    }
+
+    function decodeState(hash) {
+        try {
+            let b64 = hash.replace(/-/g, '+').replace(/_/g, '/');
+            while (b64.length % 4) b64 += '=';
+            return JSON.parse(decodeURIComponent(escape(atob(b64))));
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function getSaved() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setSaved(list) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        } catch (e) {
+            /* quota / private mode */
+        }
+    }
+
+    function renderSavedList() {
+        const list = getSaved();
+        const wrap = document.getElementById('saved-wrap');
+        const count = document.getElementById('saved-count');
+        const ul = document.getElementById('saved-list');
+        if (!wrap || !ul) return;
+        if (list.length === 0) {
+            wrap.hidden = true;
+            return;
+        }
+        wrap.hidden = false;
+        if (count) count.textContent = list.length;
+        ul.innerHTML = list
+            .map((item, i) => {
+                const when = new Date(item.saved).toLocaleString('nl-NL', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                });
+                const safeName = item.name.replace(/[<>&"']/g, (c) =>
+                    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c])
+                );
+                return (
+                    `<li>` +
+                    `<div class="saved-info"><span class="saved-name">${safeName}</span>` +
+                    `<span class="saved-date">${when}</span></div>` +
+                    `<div class="saved-actions">` +
+                    `<button type="button" data-action="load" data-idx="${i}">Laden</button>` +
+                    `<button type="button" data-action="share" data-idx="${i}">Deel</button>` +
+                    `<button type="button" data-action="delete" data-idx="${i}">×</button>` +
+                    `</div></li>`
+                );
+            })
+            .join('');
+    }
+
+    let toastTimer = null;
+    function toast(msg) {
+        const el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.add('toast-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('toast-visible'), 2200);
+    }
+
+    async function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (e) {
+                /* fall through */
+            }
+        }
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        let ok = false;
+        try {
+            ok = document.execCommand('copy');
+        } catch (e) {
+            /* noop */
+        }
+        document.body.removeChild(ta);
+        return ok;
+    }
+
+    function shareLinkFor(state) {
+        const hash = '#s=' + encodeState(state);
+        return location.origin + location.pathname + hash;
+    }
+
+    async function handleShare(state) {
+        const url = shareLinkFor(state);
+        history.replaceState(null, '', url);
+        const ok = await copyToClipboard(url);
+        toast(ok ? 'Link gekopieerd naar klembord' : 'Kopiëren mislukt — kopieer uit URL');
+    }
+
+    function handleSave() {
+        const titelEl = document.getElementById('in-titel');
+        const defaultName =
+            (titelEl && titelEl.value.trim()) ||
+            'Analyse ' + new Date().toLocaleDateString('nl-NL');
+        const name = prompt('Naam voor deze analyse:', defaultName);
+        if (!name) return;
+        if (titelEl && !titelEl.value.trim()) titelEl.value = name;
+        const list = getSaved();
+        list.unshift({ name: name.slice(0, 80), state: currentState(), saved: Date.now() });
+        setSaved(list.slice(0, 50));
+        renderSavedList();
+        toast('Analyse opgeslagen');
+    }
+
+    function handleSavedClick(e) {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const idx = parseInt(btn.dataset.idx, 10);
+        const list = getSaved();
+        const item = list[idx];
+        if (!item) return;
+        const action = btn.dataset.action;
+        if (action === 'load') {
+            applyState(item.state);
+            toast('Geladen: ' + item.name);
+        } else if (action === 'share') {
+            handleShare(item.state);
+        } else if (action === 'delete') {
+            if (!confirm('"' + item.name + '" verwijderen?')) return;
+            list.splice(idx, 1);
+            setSaved(list);
+            renderSavedList();
+        }
+    }
+
     function init() {
         const inputs = document.querySelectorAll('.calc-input input');
         inputs.forEach((el) => {
             el.addEventListener('input', update);
             el.addEventListener('change', update);
         });
+
+        // Load from URL hash if present
+        if (location.hash.startsWith('#s=')) {
+            const state = decodeState(location.hash.slice(3));
+            if (state) applyState(state);
+        }
+
         // Reset-knop
         const resetBtn = document.getElementById('btn-reset');
         if (resetBtn) {
@@ -562,9 +749,26 @@
                 document.querySelectorAll('.calc-input input[data-default]').forEach((el) => {
                     el.value = el.dataset.default;
                 });
+                const t = document.getElementById('in-titel');
+                if (t) t.value = '';
+                history.replaceState(null, '', location.pathname);
                 update();
             });
         }
+
+        const saveBtn = document.getElementById('btn-save');
+        if (saveBtn) saveBtn.addEventListener('click', handleSave);
+
+        const shareBtn = document.getElementById('btn-share');
+        if (shareBtn) shareBtn.addEventListener('click', () => handleShare(currentState()));
+
+        const printBtn = document.getElementById('btn-print');
+        if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+        const savedList = document.getElementById('saved-list');
+        if (savedList) savedList.addEventListener('click', handleSavedClick);
+
+        renderSavedList();
         update();
     }
 
