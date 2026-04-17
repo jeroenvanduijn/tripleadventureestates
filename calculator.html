@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beslis Calculator | Triple Adventure Estates</title>
+    <meta name="description" content="Beoordeel een vastgoedinvestering op DSCR, ICR, BAR, NAR en ROI, met benchmarks en exit-scenario's.">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-calc">
+    <a href="#main" class="skip-link">Ga naar inhoud</a>
+
+    <header class="header">
+        <div class="header-inner">
+            <a class="logo" href="index.html">Triple Adventure Estates</a>
+            <a href="index.html" class="header-contact">← Terug</a>
+        </div>
+    </header>
+
+    <main id="main" class="calc-main">
+        <section class="calc-hero">
+            <div class="container container-wide">
+                <h1>Beslis Calculator</h1>
+                <p class="subtitle">Oordeel of een investering de moeite waard is.</p>
+                <p class="tagline">Vul de gegevens in — de ratio's en scenario's rekenen live mee.</p>
+                <button id="btn-reset" class="cta-button cta-secondary" type="button">Herstel voorbeeldwaarden</button>
+            </div>
+        </section>
+
+        <div class="container container-wide">
+
+            <!-- =========================
+                 INPUTS
+                 ========================= -->
+            <div class="calc-grid calc-grid-inputs">
+
+                <!-- Aankoop -->
+                <section class="calc-card">
+                    <h2>Aankoop</h2>
+                    <div class="calc-input">
+                        <label for="in-bod">Bod (koopprijs)</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-bod" type="number" step="1000" value="160000" data-default="160000"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-taxatie">Taxatiewaarde</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-taxatie" type="number" step="1000" value="160000" data-default="160000"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-notaris">Notaris</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-notaris" type="number" step="50" value="2500" data-default="2500"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-overdracht">Overdrachtsbelasting</label>
+                        <div class="input-wrap"><input id="in-overdracht" type="number" step="0.1" value="8" data-default="8"><span class="suffix">%</span></div>
+                    </div>
+                </section>
+
+                <!-- Eenmalige overige kosten -->
+                <section class="calc-card">
+                    <h2>Eenmalige overige kosten</h2>
+                    <div class="calc-input">
+                        <label for="in-notaris-hyp">Notaris hypotheek</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-notaris-hyp" type="number" step="50" value="750" data-default="750"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-bemiddeling">Bemiddeling</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-bemiddeling" type="number" step="100" value="4000" data-default="4000"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-oprichting">Oprichting BV</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-oprichting" type="number" step="100" value="0" data-default="0"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-hyp-kosten">Hypotheekkosten</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-hyp-kosten" type="number" step="100" value="3500" data-default="3500"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-accountant">Accountant jaar 1</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-accountant" type="number" step="100" value="0" data-default="0"></div>
+                    </div>
+                </section>
+
+                <!-- Hypotheek -->
+                <section class="calc-card">
+                    <h2>Hypotheek</h2>
+                    <div class="calc-input">
+                        <label for="in-aflvrij">Aflossingsvrij deel (% van taxatie)</label>
+                        <div class="input-wrap"><input id="in-aflvrij" type="number" step="1" value="90" data-default="90"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-annuit">Annuïteit deel (% van taxatie)</label>
+                        <div class="input-wrap"><input id="in-annuit" type="number" step="1" value="0" data-default="0"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-rente">Rente</label>
+                        <div class="input-wrap"><input id="in-rente" type="number" step="0.05" value="5.7" data-default="5.7"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-looptijd">Looptijd (jaren)</label>
+                        <div class="input-wrap"><input id="in-looptijd" type="number" step="1" value="20" data-default="20"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-aflvrij-vanaf">Aflossingsvrij vanaf jaar (0 = nooit)</label>
+                        <div class="input-wrap"><input id="in-aflvrij-vanaf" type="number" step="1" value="0" data-default="0"></div>
+                    </div>
+                </section>
+
+                <!-- Huur & kosten -->
+                <section class="calc-card">
+                    <h2>Huur & kosten</h2>
+                    <div class="calc-input">
+                        <label for="in-huur">Huidige huur per maand</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-huur" type="number" step="10" value="655" data-default="655"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-ozb">OZB per maand</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-ozb" type="number" step="1" value="20" data-default="20"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-verzekering">Verzekering per maand</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-verzekering" type="number" step="1" value="42" data-default="42"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-onderhoud">Onderhoud (% koopprijs per jaar)</label>
+                        <div class="input-wrap"><input id="in-onderhoud" type="number" step="0.1" value="1" data-default="1"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-beheer">Beheer (% van huur)</label>
+                        <div class="input-wrap"><input id="in-beheer" type="number" step="0.5" value="8" data-default="8"><span class="suffix">%</span></div>
+                    </div>
+                </section>
+
+                <!-- Verbouwing -->
+                <section class="calc-card">
+                    <h2>Verbouwing</h2>
+                    <div class="calc-input">
+                        <label for="in-verbouwing">Verbouwingskosten</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-verbouwing" type="number" step="500" value="0" data-default="0"></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-nieuwe-huur">Nieuwe huur per maand</label>
+                        <div class="input-wrap"><span class="prefix">€</span><input id="in-nieuwe-huur" type="number" step="10" value="1200" data-default="1200"></div>
+                    </div>
+                </section>
+
+                <!-- Aannames -->
+                <section class="calc-card">
+                    <h2>Aannames</h2>
+                    <div class="calc-input">
+                        <label for="in-waardestijging">Waardestijging pand per jaar</label>
+                        <div class="input-wrap"><input id="in-waardestijging" type="number" step="0.1" value="1" data-default="1"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-huurindex">Huurindexatie per jaar</label>
+                        <div class="input-wrap"><input id="in-huurindex" type="number" step="0.1" value="1" data-default="1"><span class="suffix">%</span></div>
+                    </div>
+                    <div class="calc-input">
+                        <label for="in-doel-bar">Doel BAR (voor max bod)</label>
+                        <div class="input-wrap"><input id="in-doel-bar" type="number" step="0.1" value="8" data-default="8"><span class="suffix">%</span></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- =========================
+                 INVESTERING & FINANCIERING
+                 ========================= -->
+            <section class="calc-card calc-card-full">
+                <h2>Investering & financiering</h2>
+                <dl class="calc-summary">
+                    <div><dt>Korting t.o.v. taxatie</dt><dd id="out-korting">—</dd></div>
+                    <div><dt>Overdrachtsbelasting</dt><dd id="out-overdracht">—</dd></div>
+                    <div><dt>Totaal aankoop</dt><dd id="out-totaal-aankoop">—</dd></div>
+                    <div><dt>Eenmalige overige kosten</dt><dd id="out-overige">—</dd></div>
+                    <div><dt>Verbouwing</dt><dd id="out-verbouwing">—</dd></div>
+                    <div class="highlight"><dt>Totaal investering</dt><dd id="out-totaal-investering">—</dd></div>
+                    <div><dt>Aflossingsvrij deel</dt><dd id="out-afl-vrij">—</dd></div>
+                    <div><dt>Annuïteit deel</dt><dd id="out-annuit">—</dd></div>
+                    <div><dt>Totale hypotheek</dt><dd id="out-hypotheek">—</dd></div>
+                    <div><dt>LTV (hyp ÷ taxatie)</dt><dd id="out-ltv">—</dd></div>
+                    <div class="highlight"><dt>Eigen inleg (totaal)</dt><dd id="out-inleg">—</dd></div>
+                    <div><dt>Eigen inleg per persoon (⅓)</dt><dd id="out-inleg-persoon">—</dd></div>
+                </dl>
+            </section>
+
+            <!-- =========================
+                 CASHFLOW
+                 ========================= -->
+            <section class="calc-card calc-card-full">
+                <h2>Cashflow per maand & jaar</h2>
+                <div class="calc-table-wrap">
+                    <table class="calc-table">
+                        <thead>
+                            <tr class="scenario-row">
+                                <th rowspan="2">Post</th>
+                                <th colspan="2" class="scenario-huidig">Huidig</th>
+                                <th colspan="2" class="scenario-nieuw">Na verbouwing</th>
+                            </tr>
+                            <tr>
+                                <th>Maand</th><th>Jaar</th>
+                                <th>Maand</th><th>Jaar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cashflow-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- =========================
+                 RATIO'S
+                 ========================= -->
+            <section class="calc-card calc-card-full">
+                <h2>Ratio's & oordeel</h2>
+                <p class="card-lead">Zeven gangbare kengetallen, elk met benchmark. Kleur geeft het oordeel: <span class="pill pill-slecht">Slecht</span> <span class="pill pill-matig">Matig</span> <span class="pill pill-goed">Goed</span> <span class="pill pill-zeergoed">Zeer goed</span>.</p>
+                <div class="calc-table-wrap">
+                    <table class="calc-table calc-ratios">
+                        <thead>
+                            <tr>
+                                <th>Ratio</th>
+                                <th class="scenario-huidig">Huidig</th>
+                                <th class="scenario-nieuw">Na verbouwing</th>
+                                <th>Benchmark</th>
+                                <th>Uitleg</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ratios-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- =========================
+                 MAX BOD
+                 ========================= -->
+            <section class="calc-card calc-card-full">
+                <h2>Max bod bij doel-BAR</h2>
+                <p class="card-lead">Bij een doel-BAR van <strong id="out-doel-bar">—</strong> is dit de maximale koopprijs die nog past bij de jaarhuur.</p>
+                <dl class="calc-summary calc-summary-split">
+                    <div>
+                        <dt>Max bod bij huidige huur</dt>
+                        <dd id="out-max-bod-huidig">—</dd>
+                    </div>
+                    <div>
+                        <dt>Δ t.o.v. bod <span id="out-delta-huidig-badge" class="pill"></span></dt>
+                        <dd id="out-delta-huidig">—</dd>
+                    </div>
+                    <div>
+                        <dt>Max bod bij huur na verbouwing</dt>
+                        <dd id="out-max-bod-nieuw">—</dd>
+                    </div>
+                    <div>
+                        <dt>Δ t.o.v. bod + verbouwing <span id="out-delta-nieuw-badge" class="pill"></span></dt>
+                        <dd id="out-delta-nieuw">—</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <!-- =========================
+                 EXIT SCENARIO'S
+                 ========================= -->
+            <section class="calc-card calc-card-full">
+                <h2>Exit-scenario's</h2>
+                <p class="card-lead">Wat blijft er over bij verkoop na 10 of 20 jaar? Inclusief cumulatieve cashflow, waardestijging en restschuld.</p>
+                <div class="calc-table-wrap">
+                    <table class="calc-table">
+                        <thead>
+                            <tr class="scenario-row">
+                                <th rowspan="2">Post</th>
+                                <th colspan="2" class="scenario-huidig">Huidig</th>
+                                <th colspan="2" class="scenario-nieuw">Na verbouwing</th>
+                            </tr>
+                            <tr>
+                                <th>Na 10 jr</th><th>Na 20 jr</th>
+                                <th>Na 10 jr</th><th>Na 20 jr</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exit-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="calc-note">
+                <h2>Over deze calculator</h2>
+                <p>De berekening volgt het vastgoed-beslisraamwerk: inkomsten en kosten → netto huur → kapitaalslasten → cashflow. Daarbovenop leveren zeven ratio's het oordeel: <strong>DSCR</strong> en <strong>ICR</strong> voor de financierbaarheid, <strong>BAR</strong> en <strong>NAR</strong> voor het aanvangsrendement, <strong>ROI</strong> en <strong>ROI Totaal</strong> voor het rendement op eigen vermogen, en de <strong>Kapitalisatiefactor</strong> voor de terugverdientijd.</p>
+                <p>De exit-scenario's projecteren 20 jaar met vaste waardestijging en huurindexatie; aflossing volgt het gekozen hypotheektype. Eigen inleg ÷ drie toont de verdeling bij drie partners.</p>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="copyright">&copy; 2025 Triple Adventure Estates B.V. — intern rekenhulpmiddel</p>
+        </div>
+    </footer>
+
+    <script src="calculator.js"></script>
+</body>
+</html>
