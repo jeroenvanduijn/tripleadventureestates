@@ -575,15 +575,58 @@
         update();
     }
 
+    // Korte codes voor compacte URLs
+    const CODE_MAP = {
+        _t: 't',
+        'in-bod': 'a',
+        'in-taxatie': 'b',
+        'in-notaris': 'c',
+        'in-overdracht': 'd',
+        'in-notaris-hyp': 'e',
+        'in-bemiddeling': 'f',
+        'in-oprichting': 'g',
+        'in-hyp-kosten': 'h',
+        'in-accountant': 'i',
+        'in-aflvrij': 'j',
+        'in-annuit': 'k',
+        'in-rente': 'l',
+        'in-looptijd': 'm',
+        'in-aflvrij-vanaf': 'n',
+        'in-huur': 'o',
+        'in-ozb': 'p',
+        'in-verzekering': 'q',
+        'in-onderhoud': 'r',
+        'in-beheer': 's',
+        'in-verbouwing': 'u',
+        'in-nieuwe-huur': 'v',
+        'in-waardestijging': 'w',
+        'in-huurindex': 'x',
+        'in-doel-bar': 'y',
+    };
+    const CODE_REVERSE = Object.fromEntries(
+        Object.entries(CODE_MAP).map(([k, v]) => [v, k])
+    );
+
     function encodeState(state) {
-        const json = JSON.stringify(state);
-        return btoa(unescape(encodeURIComponent(json)))
-            .replace(/=+$/g, '')
-            .replace(/\+/g, '-')
-            .replace(/\//g, '_');
+        const parts = [];
+        if (state._t) {
+            parts.push('t=' + encodeURIComponent(state._t));
+        }
+        Object.keys(state).forEach((id) => {
+            if (id === '_t') return;
+            const code = CODE_MAP[id];
+            if (!code) return;
+            const el = document.getElementById(id);
+            const def = el && el.dataset ? el.dataset.default : undefined;
+            // Skip als waarde gelijk is aan default
+            if (def !== undefined && String(state[id]) === String(def)) return;
+            if (state[id] === '' || state[id] === null || state[id] === undefined) return;
+            parts.push(code + '=' + encodeURIComponent(state[id]));
+        });
+        return parts.join('&');
     }
 
-    function decodeState(hash) {
+    function decodeLegacyBase64(hash) {
         try {
             let b64 = hash.replace(/-/g, '+').replace(/_/g, '/');
             while (b64.length % 4) b64 += '=';
@@ -591,6 +634,25 @@
         } catch (e) {
             return null;
         }
+    }
+
+    function decodeState(str) {
+        if (!str) return {};
+        // Legacy base64 fallback (oude #s= links)
+        if (!str.includes('=') && /^[A-Za-z0-9\-_]+$/.test(str) && str.length > 30) {
+            return decodeLegacyBase64(str) || {};
+        }
+        const out = {};
+        str.split('&').forEach((pair) => {
+            if (!pair) return;
+            const eq = pair.indexOf('=');
+            if (eq < 0) return;
+            const code = pair.slice(0, eq);
+            const val = decodeURIComponent(pair.slice(eq + 1));
+            const id = CODE_REVERSE[code];
+            if (id) out[id] = val;
+        });
+        return out;
     }
 
     function getSaved() {
