@@ -307,6 +307,11 @@
                 ltv,
                 eigenInleg,
                 eigenInlegPersoon,
+                // Breakdown voor benodigd EV
+                bod: i.bod,
+                notaris: i.notaris,
+                verbouwing: i.verbouwing,
+                aankoopGap: i.bod - totaalHyp,
             },
             huidig,
             nieuw,
@@ -468,14 +473,31 @@
         setText('out-overdracht', euro(a.overdracht));
         setText('out-totaal-aankoop', euro(a.totaalAankoop));
         setText('out-overige', euro(a.eenmaligeOverige));
-        setText('out-verbouwing', euro(readNumber('in-verbouwing')));
+        setText('out-verbouwing', euro(a.verbouwing));
         setText('out-totaal-investering', euro(a.totaalInvestering));
         setText('out-afl-vrij', euro(a.aflVrij));
         setText('out-annuit', euro(a.annuit));
         setText('out-hypotheek', euro(a.totaalHyp));
         setText('out-ltv', pct(a.ltv));
-        setText('out-inleg', euro(a.eigenInleg));
-        setText('out-inleg-persoon', euro(a.eigenInlegPersoon));
+
+        // Benodigd eigen vermogen block
+        setText('out-ev-totaal', euro(a.eigenInleg));
+        setText('out-ev-gap', euro(a.aankoopGap));
+        setText('out-ev-notaris', euro(a.notaris));
+        setText('out-ev-overdracht', euro(a.overdracht));
+        setText('out-ev-overige', euro(a.eenmaligeOverige));
+        setText('out-ev-verbouwing', euro(a.verbouwing));
+        setText('out-ev-persoon', euro(a.eigenInlegPersoon));
+
+        // Rendement op eigen vermogen
+        setText('out-ev-roi-h', pct(r.huidig.roi));
+        setText('out-ev-roi-n', pct(r.nieuw.roi));
+        setText('out-ev-roitot-h', pct(r.huidig.roiTot));
+        setText('out-ev-roitot-n', pct(r.nieuw.roiTot));
+        setText('out-ev-gem10-h', pct(r.exitHuidig.j10.gem));
+        setText('out-ev-gem10-n', pct(r.exitNieuw.j10.gem));
+        setText('out-ev-gem20-h', pct(r.exitHuidig.j20.gem));
+        setText('out-ev-gem20-n', pct(r.exitNieuw.j20.gem));
     }
 
     function renderReverse(r, i) {

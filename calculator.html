@@ -191,9 +191,58 @@
                     <div><dt>Annuïteit deel</dt><dd id="out-annuit">—</dd></div>
                     <div><dt>Totale hypotheek</dt><dd id="out-hypotheek">—</dd></div>
                     <div><dt>LTV (hyp ÷ taxatie)</dt><dd id="out-ltv">—</dd></div>
-                    <div class="highlight"><dt>Eigen inleg (totaal)</dt><dd id="out-inleg">—</dd></div>
-                    <div><dt>Eigen inleg per persoon (⅓)</dt><dd id="out-inleg-persoon">—</dd></div>
                 </dl>
+
+                <div class="ev-block">
+                    <div class="ev-header">
+                        <h3>Benodigd eigen vermogen</h3>
+                        <span class="ev-total" id="out-ev-totaal">—</span>
+                    </div>
+                    <p class="ev-lead">Totale investering min hypotheek — het bedrag dat je zelf moet inbrengen om de deal rond te krijgen.</p>
+                    <dl class="ev-breakdown">
+                        <div><dt>Aankoopgap <span class="hint">(bod − hypotheek)</span></dt><dd id="out-ev-gap">—</dd></div>
+                        <div><dt>Notaris aankoop</dt><dd id="out-ev-notaris">—</dd></div>
+                        <div><dt>Overdrachtsbelasting</dt><dd id="out-ev-overdracht">—</dd></div>
+                        <div><dt>Eenmalige overige kosten</dt><dd id="out-ev-overige">—</dd></div>
+                        <div><dt>Verbouwing</dt><dd id="out-ev-verbouwing">—</dd></div>
+                        <div class="ev-sum"><dt>Per persoon <span class="hint">(⅓)</span></dt><dd id="out-ev-persoon">—</dd></div>
+                    </dl>
+
+                    <h4 class="ev-subheader">Rendement op eigen vermogen</h4>
+                    <div class="calc-table-wrap">
+                        <table class="calc-table ev-rendement-table">
+                            <thead>
+                                <tr>
+                                    <th>Periode</th>
+                                    <th class="num scenario-huidig">Huidig</th>
+                                    <th class="num scenario-nieuw">Na verbouwing</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Jaar 1 — cashflow <span class="hint">(ROI)</span></th>
+                                    <td class="num" id="out-ev-roi-h">—</td>
+                                    <td class="num" id="out-ev-roi-n">—</td>
+                                </tr>
+                                <tr>
+                                    <th>Jaar 1 — incl. aflossing <span class="hint">(ROI totaal)</span></th>
+                                    <td class="num" id="out-ev-roitot-h">—</td>
+                                    <td class="num" id="out-ev-roitot-n">—</td>
+                                </tr>
+                                <tr>
+                                    <th>Gem. per jaar over 10 jr <span class="hint">(incl. waardestijging)</span></th>
+                                    <td class="num" id="out-ev-gem10-h">—</td>
+                                    <td class="num" id="out-ev-gem10-n">—</td>
+                                </tr>
+                                <tr>
+                                    <th>Gem. per jaar over 20 jr <span class="hint">(incl. waardestijging)</span></th>
+                                    <td class="num" id="out-ev-gem20-h">—</td>
+                                    <td class="num" id="out-ev-gem20-n">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
 
             <!-- =========================
